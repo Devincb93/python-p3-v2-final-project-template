@@ -10,18 +10,18 @@ class Book:
     
     all = {}
 
-    def __init__(self, title, genre, author, id=None):
+    def __init__(self, title, genre, author_id, id=None):
         self.id = id
         self.title = title
         self.genre = genre
-        self.author = author
+        self.author_id = author_id
         
     
         
 
     def __repr__(self):
         return (
-            f"<Book {self.id}: {self.title}, {self.genre} " 
+            f"<Book {self.id}: {self.title}, {self.genre}, {self.author_id} " 
             
         )
     
@@ -33,8 +33,8 @@ class Book:
             id INTEGER PRIMARY KEY,
             title TEXT,
             genre TEXT,
-            author INTEGER,
-            FOREIGN KEY (author) REFERENCES authors(id))
+            author_id INTEGER,
+            FOREIGN KEY (author_id) REFERENCES authors(id))
         """
         CURSOR.execute(sql)
         CONN.commit()
@@ -51,18 +51,18 @@ class Book:
     
     def save(self):
         sql = """
-                INSERT INTO books (title, genre, author)
+                INSERT INTO books (title, genre, author_id)
                 VALUES (?, ?, ?)
         """
-        CURSOR.execute(sql, (self.title, self.genre, self.author))
+        CURSOR.execute(sql, (self.title, self.genre, self.author_id))
         CONN.commit()
         self.id = CURSOR.lastrowid
         type(self).all[self.id] = self
 
 
     @classmethod
-    def create(cls, title, genre, author):
-        book_id = cls(title, genre, author)
+    def create(cls, title, genre, author_id):
+        book_id = cls(title, genre, author_id)
         book_id.save()
         return book_id
     
@@ -70,10 +70,10 @@ class Book:
     def update(self):
         sql = """
             UPDATE books
-            SET title = ?, genre = ?, author = ?,
+            SET title = ?, genre = ?, author_id = ?,
             WHERE id = ?
         """
-        CURSOR.execute(sql, (self.title, self.genre, self.author,
+        CURSOR.execute(sql, (self.title, self.genre, self.author_id,
                               self.id))
         CONN.commit()
 
@@ -95,7 +95,7 @@ class Book:
         if book:
             book.title = row[1]
             book.genre = row[2]
-            book.author = row[3]
+            book.author_id = row[3]
         else:
             book = cls(row[1], row[2], row[3])
             book.id = row[0]

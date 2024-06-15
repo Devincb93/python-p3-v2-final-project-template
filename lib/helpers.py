@@ -10,6 +10,7 @@ from models.Author import(Author)
 
 
 
+
 console = Console()
 
 all_authors = []
@@ -20,32 +21,18 @@ invalid = pyfiglet.figlet_format("Invalid", font="small",)
 def menu():
     console.print(Panel(ascii_art, border_style="blue"))
     console.print(Panel("[bold]Please select an option:[/bold]", border_style="blue"))
-    console.print("1) Book's Menu")
-    console.print("2) Author's Menu")
-    console.print("3) Exit Program")
+    console.print("1) Library Terminal")
+    console.print("0) Exit Program")
 
 
 def exit_program():
-    console.print(Panel("Program Terminated", border_style="blue"))
+    console.print(Panel("[bold red]Program Terminated[/bold red]", border_style="blue"))
     exit()
 
 
-def add_book_menu():
-    print("Enter your book details:")
-    title = input("Title: ")
-    genre = input("Genre: ")
-    author = input("Author: ")
-    if len(title) > 0 and len(genre) > 0 and len(author) > 0:
-        author = Author.create(author)
-        Book.create(title, genre, author.id)
-        if not title in Author.written_books:
-            Author.written_books.append(title)
-        console.print(f"{title}, has been added to the books list")
-    else:
-        console.print("[bold red]Book was unable to be added, please check with administrator[/bold red]")
-        add_book_menu()
 
-def get_all_books():
+
+def list_all_books():
     books = Book.get_all()
     all_table = Table(title="Available Books", border_style="blue")
     all_table.add_column("Book Titles", justify="left", style="cyan")
@@ -54,17 +41,18 @@ def get_all_books():
     console.print(all_table)
 
 def get_all_authors():
-    authors = Book.get_all()
+    authors = Author.get_all()
     author_table = Table( border_style="blue")
     author_table.add_column("Authors")
-    for each in authors:
-        if not each.author.id in all_authors:
-            all_authors.append(each.author.id)
-    for each in all_authors:
-        author_table.add_row(each)
-    console.print(author_table)
+    if len(authors) > 0:
+        for author in authors:
+            author_table.add_row(author.name)
+        console.print(author_table)
+    else:
+        console.print("[bold red]*****No authors found*****[/bold red]")
 
-def get_by_title():
+def find_books_by_title():
+
     console.print(Panel("Enter the title of the book you are searching for", border_style="blue"))
     search = input(str("Title: "))
     if len(Book.get_all()) > 0 and len(search) > 0:

@@ -11,17 +11,9 @@ class Author:
     def __init__(self, name, id=None):
         self.id = id
         self.name = name
-        
-        
-        
-        
-        
 
     def __repr__(self):
-        return (
-            f"<Author {self.id}: {self.name}" 
-            
-        )
+        return ( f"<Author {self.id}: {self.name}" )
     
     @classmethod
     def create_table(cls):
@@ -92,7 +84,7 @@ class Author:
             
         else:
             
-            author = cls(row[1], row[2])
+            author = cls(row[1])
             author.id = row[0]
             cls.all[author.id] = author
         return author
@@ -124,13 +116,13 @@ class Author:
         sql = """
             SELECT *
             FROM authors
-            WHERE name is ?
+            WHERE name = ?
         """
         row = CURSOR.execute(sql, (name,)).fetchone()
         return cls.instance_from_db(row) if row else None
 
 
-    def get_books_by_author(self):
+    def books(self):
         from models.Book import Book
         sql = """
             SELECT * FROM books
