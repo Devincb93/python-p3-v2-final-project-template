@@ -45,6 +45,8 @@ def library_menu():
             library_menus()
         if choice == "2":
             book_menu()
+        if choice == "0":
+            main()
 
 
 def library_menus():
@@ -67,10 +69,7 @@ def library_menus():
         if choice == "6":
             delete_book()
             
-        if choice == "7":
-            find_books_by_title()
-        if choice == "8":
-            find_books_by_author()
+        
         elif choice == "0":
             library_menu()
         else:
@@ -85,8 +84,11 @@ def book_menu():
             book_menu()
         if choice == "2":
             find_books_by_author()
-        else:
+        if choice == "3":
+            delete_book()
+        if choice == "0":
             library_menu()
+       
 
 
 

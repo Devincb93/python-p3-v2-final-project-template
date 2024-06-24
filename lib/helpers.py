@@ -28,11 +28,14 @@ def authors_menu():
     console.print(Panel("Library Menu:", border_style="blue"))
     console.print("1) Author's Menu")
     console.print("2) Book's Menu")
+    console.print("0) Go Back")
 
 def book_menu_text():
     console.print(Panel("Book's Menu: ", border_style="blue"))
     console.print("1) Search for book by title")
     console.print("2) Search for books by Author")
+    console.print("3) Delete a book")
+    console.print("0) Go Back")
 
 
 def library_menu_text():
@@ -101,19 +104,14 @@ def add_authors_book(author):
 
 def delete_book():
     books = Book.get_all()
-    table = Table(title="Available Books", border_style="blue")
-    table.add_column("Book Titles")
-    for book in books:
-        table.add_row(book.title)
-    console.print(table)
-    console.print(Panel("Enter the name of the book you want to Delete:", border_style="blue"))
-    delete_selection = input("Title: ")
-    if len(delete_selection) > 0:
-        for book in books:
-            if delete_selection in book.title:
-                book.delete()
-                console.print(f"Book:{book.title} deleted successfuly ")
-
+    console.print(Panel("Select the name of the book you want to Delete:", border_style="blue"))
+    for i, book in enumerate(books, start=1):
+        console.print(f"{i}) {book.title}")
+    choice = input("> ")
+    if 0 <= int(choice) <= len(books):
+        selected_book = books[int(choice) - 1]
+        selected_book.delete()
+    
 
 def list_all_books():
     books = Book.get_all()
@@ -150,8 +148,24 @@ def find_books_by_title():
         console.print(searched)
 
 def find_books_by_author():
-    found_books = Author.books()
-    console.print(found_books)
+    found_books = []
+    authors = Author.get_all()
+    console.print(Panel("Select from an author below: ", border_style="blue"))
+    for i, author in enumerate(authors, start=1):
+        
+        console.print(f"{i}) {author.name}")
+
+    choice = input("> ")
+    if 0 <= int(choice) <= len(authors):
+            selected_author = authors[int(choice) -1]
+            found_books = selected_author.books()
+            # found_books.append(Author.books(selected_author))
+        
+    found_table = Table(border_style="blue")
+    found_table.add_column("Your Search: ")
+    for book in found_books:
+        found_table.add_row(book.title)
+    console.print(found_table)
             
         
         
